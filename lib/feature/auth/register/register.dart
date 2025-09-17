@@ -1,5 +1,6 @@
 import 'package:event_app/core/resource/images_manager/image_manager.dart';
 import 'package:event_app/core/resource/regex_manager/regex_manager.dart';
+import 'package:event_app/core/route_manager/route_manager.dart';
 import 'package:event_app/core/widgets/custom_button.dart';
 import 'package:event_app/core/widgets/custom_text_button.dart';
 import 'package:event_app/core/widgets/custom_text_field.dart';
@@ -46,8 +47,7 @@ class _RegisterState extends State<Register> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Image.asset(ImageAssets.eventLogo, width: 131.w, height: 141.h),
-
+              Image.asset(ImageAssets.eventLogo, width: 130.w, height: 130.h),
               // SizedBox(height: 24.h),
               CustomTextField(
                 controller: _nameController,
@@ -118,7 +118,9 @@ class _RegisterState extends State<Register> {
                     "Already Have Account ? ",
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
-                  CustomTextButton(text: "Login", onTap: () {}),
+                  CustomTextButton(text: "Login", onTap: () {
+                    Navigator.pushReplacementNamed(context, RouteManager.login);
+                  }),
                 ],
               ),
             ],
