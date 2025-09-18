@@ -155,13 +155,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
+
 
   void _onPasswordClickedIcon() {
     setState(() {
@@ -171,5 +165,14 @@ class _LoginState extends State<Login> {
 
   void _login() {
     if (_formKey.currentState?.validate() == false) return;
+  }
+
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }
