@@ -12,7 +12,7 @@ class EventApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(393,481),
+      designSize: Size(393,841),
       minTextAdapt: true,
         splitScreenMode: true,
         builder: (context,child) =>MaterialApp(
