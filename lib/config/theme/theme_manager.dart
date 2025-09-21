@@ -98,6 +98,16 @@ class ThemeManager {
         fontWeight: FontWeight.w500,
         color: ColorsManager.black,
       ),
+      labelMedium: GoogleFonts.inter(
+        fontSize: 20.sp,
+        fontWeight: FontWeight.bold,
+        color: ColorsManager.black,
+      ),
+      displayMedium: GoogleFonts.inter(
+        fontSize: 20.sp,
+        fontWeight: FontWeight.bold,
+        color: ColorsManager.blue,
+      )
     ),
   );
   static final ThemeData dark = ThemeData();

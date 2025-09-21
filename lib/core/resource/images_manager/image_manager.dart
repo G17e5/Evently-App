@@ -5,4 +5,5 @@ abstract class ImageAssets {
   static const String goggleIcon = "$baseUrl/google.png";
   static const String sportLight = "$baseUrl/sport_light.png";
   static const String birthdayLight = "$baseUrl/birthday_light.png";
+  static const String routeProfile = "$baseUrl/route_profile.png";
 }
