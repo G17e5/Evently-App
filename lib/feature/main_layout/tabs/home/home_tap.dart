@@ -27,7 +27,7 @@ class _HomeTapState extends State<HomeTap> {
           width: double.infinity,
 
           decoration: BoxDecoration(
-            color: ColorsManager.blue,
+            color:Theme.of(context).primaryColor,
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(24.r)),
           ),
           child: Column(
@@ -52,7 +52,7 @@ class _HomeTapState extends State<HomeTap> {
                           children: [
                             Icon(
                               Icons.location_on,
-                              color: ColorsManager.whiteBlue,
+                              color: ColorsManager.ofWhite,
                             ),
                             Text(
                               "Cairo , Egypt",
@@ -71,6 +71,7 @@ class _HomeTapState extends State<HomeTap> {
                     InkWell(
                       onTap: () {},
                       child: Card(
+                        color: ColorsManager.ofWhite,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
@@ -95,7 +96,7 @@ class _HomeTapState extends State<HomeTap> {
         ),
         Expanded(
           child: ListView.separated(
-            padding: EdgeInsets.symmetric(vertical:16 ),
+            padding: EdgeInsets.symmetric( vertical:16 ),
             itemBuilder: (context, index) => EventItem(
               event: EventModel(
                 dateTime: DateTime.now(),

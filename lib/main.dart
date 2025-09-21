@@ -20,8 +20,8 @@ class EventApp extends StatelessWidget {
           initialRoute :RouteManager.mainLayout ,
           onGenerateRoute :RouteManager.router ,
           theme:ThemeManager.light ,
-          darkTheme:ThemeManager.light ,
-          themeMode:ThemeMode.light ,
+          darkTheme:ThemeManager.dark ,
+          themeMode:ThemeMode.dark ,
           locale: Locale("en"),
         ),
     );

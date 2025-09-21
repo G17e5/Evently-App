@@ -44,7 +44,7 @@ class EventItem extends StatelessWidget {
             children: [
              Card(
                child: Padding(
-                 padding: REdgeInsets.all(8.0),
+                 padding: REdgeInsets.symmetric(horizontal: 8.0),
                  child: Column(
                    children: [
                      Text(event.dateTime.day.toString() , style:GoogleFonts.inter(fontSize:20.sp ,fontWeight: FontWeight.bold , color: ColorsManager.blue)),
@@ -56,7 +56,7 @@ class EventItem extends StatelessWidget {
              Spacer(),
               Card(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0 ,vertical: 10),
+                  padding: const EdgeInsets.symmetric( horizontal: 8.0 ,vertical: 5),
                   child: Row(
                     children: [
                       Expanded(child: Text(event.title , style:Theme.of(context).textTheme.titleSmall),)
