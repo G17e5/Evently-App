@@ -34,7 +34,7 @@ class EventItem extends StatelessWidget {
           decoration: BoxDecoration(
             image:DecorationImage(
                 fit: BoxFit.fill,
-                image: AssetImage(ImageAssets.meeting)),
+                image: AssetImage(ImageAssets.birthdayLight)),
             borderRadius: BorderRadius.circular(16.r),
             border: Border.all(
                 color: ColorsManager.blue ,width: 1.w)
