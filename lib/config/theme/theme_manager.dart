@@ -103,6 +103,11 @@ class ThemeManager {
         fontWeight: FontWeight.bold,
         color: ColorsManager.black,
       ),
+      labelSmall: GoogleFonts.inter(
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w500,
+        color: ColorsManager.black,
+      ),
       displayMedium: GoogleFonts.inter(
         fontSize: 20.sp,
         fontWeight: FontWeight.bold,

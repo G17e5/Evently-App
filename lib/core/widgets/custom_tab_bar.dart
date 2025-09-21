@@ -42,7 +42,7 @@ class _CustomTapBarState extends State<CustomTapBar> {
               selectedTaFgColors: widget.selectedTaFgColors,
               unselectedTaBbgColors: widget.unselectedTaBbgColors,
               unselectedTaFgColors: widget.unselectedTaFgColors ,
-              isSelected: selectedIndex == CategoryModel.categoriesWithAll.indexOf(category),
+              isSelected: selectedIndex == widget.categories.indexOf(category),
               category: category,
             ),
           ),

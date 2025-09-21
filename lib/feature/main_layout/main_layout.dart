@@ -1,4 +1,5 @@
 import 'package:event_app/core/resource/colors_manager/colors_manager.dart';
+import 'package:event_app/core/route_manager/route_manager.dart';
 import 'package:event_app/feature/main_layout/tabs/favorite/Favorite_tap.dart';
 import 'package:event_app/feature/main_layout/tabs/home/home_tap.dart';
 import 'package:event_app/feature/main_layout/tabs/map/map_tap.dart';
@@ -30,7 +31,9 @@ class _MainLayoutState extends State<MainLayout> {
   Widget _buildFab()
   {
    return FloatingActionButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pushNamed(context, RouteManager.createEvent);
+      },
       child: Icon(Icons.add),
     );
   }

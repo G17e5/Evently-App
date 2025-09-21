@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
-    required this.label,
+     this.label,
+    this.hint,
     this.hintText,
     this.prefixIcon,
     this.keyboardType = TextInputType.text,
@@ -11,9 +12,12 @@ class CustomTextField extends StatelessWidget {
     this.isSecure = false,
     required this.validator,
     required this.controller,
+     this.lines = 1
+
   });
 
-  final String label;
+  final String? label;
+  final String? hint;
   final String? hintText;
   final IconData? prefixIcon;
   final Widget? suffixIcon;
@@ -21,10 +25,12 @@ class CustomTextField extends StatelessWidget {
   final bool isSecure;
   final String? Function(String?) validator;
   final TextEditingController controller;
+  final int lines;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLines:lines ,
       controller: controller,
       validator: validator,
       obscureText: isSecure,
@@ -33,7 +39,7 @@ class CustomTextField extends StatelessWidget {
         prefixIcon: prefixIcon == null ? null : Icon(prefixIcon),
         suffixIcon: suffixIcon,
         labelText: label,
-        hintText: hintText,
+        hintText: hint,
         border: const OutlineInputBorder(),
         errorStyle: const TextStyle(color: Colors.red),
       ),
