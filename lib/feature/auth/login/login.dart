@@ -4,6 +4,7 @@ import 'package:event_app/core/resource/regex_manager/regex_manager.dart';
 import 'package:event_app/core/route_manager/route_manager.dart';
 import 'package:event_app/core/widgets/custom_text_button.dart';
 import 'package:event_app/core/widgets/custom_text_field.dart';
+import 'package:event_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,28 +34,30 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding:  REdgeInsets.all(8.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 8.h),
-              Image.asset(ImageAssets.eventLogo, width: 130.w, height: 130.h),
-              SizedBox(height: 8.h),
+              // SizedBox(height: 16.h),
+              SafeArea(child: Image.asset(ImageAssets.eventLogo, width: 130.w, height: 130.h)),
+              SizedBox(height: 24.h),
               CustomTextField(
-                label: "Email",
+                label:appLocalizations.email,
                 validator: (value) => ValidatorManager.validateEmail(value),
                 prefixIcon: Icons.email,
                 controller: _emailController,
                 keyboardType: TextInputType.name,
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: 16.h),
               CustomTextField(
                 isSecure: securePassword,
-                label: "Password",
+                label:appLocalizations.password,
                 suffixIcon: IconButton(
                   onPressed: _onPasswordClickedIcon,
                   icon: Icon(
@@ -66,30 +69,33 @@ class _LoginState extends State<Login> {
                 controller: _passwordController,
                 keyboardType: TextInputType.emailAddress,
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: 16.h),
               CustomTextButton(
-                text: 'Forget Password',
+                text: appLocalizations.forget_password,
                 onTap: () {},
                 textAlign: TextAlign.right,
               ),
-              SizedBox(height: 8.h),
-              CustomButton(title: "Login", onPress: _login),
-              SizedBox(height: 8.h),
+              SizedBox(height: 16.h),
+              CustomButton(title: appLocalizations.login, onPress: _login),
+              SizedBox(height: 16.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Don’t Have Account ? ",
+                    appLocalizations.dont_have_account,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
-                  CustomTextButton(
-                    text: "Create Account",
-                    onTap: () {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        RouteManager.register,
-                      );
-                    },
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: CustomTextButton(
+                      text: appLocalizations.create_account,
+                      onTap: () {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          RouteManager.register,
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -105,7 +111,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   Text(
-                    'OR',
+                    appLocalizations.or,
                     style: GoogleFonts.inter(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w500,
@@ -138,7 +144,7 @@ class _LoginState extends State<Login> {
                     Image.asset(ImageAssets.goggleIcon),
                     SizedBox(width: 2),
                     Text(
-                      "Login With Google",
+                      appLocalizations.login_with_google,
                       style: GoogleFonts.inter(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w500,

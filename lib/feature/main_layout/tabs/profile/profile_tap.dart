@@ -1,6 +1,7 @@
 import 'package:event_app/core/resource/colors_manager/colors_manager.dart';
 import 'package:event_app/core/resource/images_manager/image_manager.dart';
 import 'package:event_app/feature/main_layout/tabs/profile/dropdwon_item.dart';
+import 'package:event_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +11,8 @@ class ProfileTap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -61,13 +64,13 @@ class ProfileTap extends StatelessWidget {
         ),
         SizedBox(height: 24.h),
         DropdwonItem(
-          title: "Theme",
-          menuItem: ["Light", "Dark"],
-          selectedItem: "Light",
+          title: appLocalizations.theme,
+          menuItem: [appLocalizations.light, appLocalizations.dark],
+          selectedItem: appLocalizations.light,
         ),
         SizedBox(height: 16.h),
         DropdwonItem(
-          title: "Theme",
+          title: appLocalizations.language,
           menuItem: ["English", "Arabic"],
           selectedItem: "English",
         ),
@@ -88,7 +91,7 @@ class ProfileTap extends StatelessWidget {
             child: Row(
               children: [Icon(Icons.logout),
               SizedBox(width: 8.w,),
-              Text("LogOut" )
+              Text(appLocalizations.logout )
 
               ],
             ),

@@ -1,5 +1,6 @@
 import 'package:event_app/core/resource/colors_manager/colors_manager.dart';
 import 'package:event_app/feature/main_layout/tabs/home/event_item.dart';
+import 'package:event_app/l10n/app_localizations.dart';
 import 'package:event_app/models/category_model.dart';
 import 'package:event_app/models/event_model.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ class FavoriteTap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+
     return SafeArea(
       child: Column(
         children: [
@@ -28,7 +31,7 @@ class FavoriteTap extends StatelessWidget {
                 ),
                 prefixIcon: Icon(Icons.search),
                 prefixIconColor: ColorsManager.blue,
-                hintText: "Search For Event",
+                hintText: appLocalizations.search_for_event,
                 hintStyle: GoogleFonts.inter(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
@@ -41,7 +44,7 @@ class FavoriteTap extends StatelessWidget {
           Expanded(child: ListView.separated(
               itemBuilder: (context,index) => EventItem(event: EventModel(
                   dateTime: DateTime.now(),
-                  category: CategoryModel.categoriesWithAll[3],
+                  category: CategoryModel.getCategoriesWithAll(context)[3],
                   title: "This is a Birthday Party ",
                   description: "description",
                   timeOfDay: TimeOfDay.now())),

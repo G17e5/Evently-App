@@ -4,6 +4,7 @@ import 'package:event_app/core/route_manager/route_manager.dart';
 import 'package:event_app/core/widgets/custom_button.dart';
 import 'package:event_app/core/widgets/custom_text_button.dart';
 import 'package:event_app/core/widgets/custom_text_field.dart';
+import 'package:event_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -34,9 +35,10 @@ class _RegisterState extends State<Register> {
   }
   @override
   Widget build(BuildContext context) {
+      AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Scaffold(
       // resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: Text("Register")),
+      appBar: AppBar(title: Text(appLocalizations.register)),
       body: SingleChildScrollView(
         padding: REdgeInsets.symmetric(
           horizontal: 8,
@@ -47,33 +49,36 @@ class _RegisterState extends State<Register> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Image.asset(ImageAssets.eventLogo, width: 130.w, height: 130.h),
-              // SizedBox(height: 24.h),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(ImageAssets.eventLogo, width: 130.w, height: 130.h),
+              ),
+               SizedBox(height: 24.h),
               CustomTextField(
                 controller: _nameController,
                 validator: ValidatorManager.validateName,
                 prefixIcon: Icons.person,
-                label: "Name",
+                label: appLocalizations.name,
                 keyboardType: TextInputType.name,
               ),
 
-              SizedBox(height: 8.h),
+              SizedBox(height: 16.h),
 
               CustomTextField(
                 controller: _emailController,
-                label: "Email",
+                label: appLocalizations.email,
                 prefixIcon: Icons.email,
                 keyboardType: TextInputType.emailAddress,
                 validator: ValidatorManager.validateEmail,
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: 16.h),
 
               CustomTextField(
                 controller: _passwordController,
                 validator: (value)=> ValidatorManager.validatePassword(value),
                 isSecure: securePassword,
                 prefixIcon: Icons.lock,
-                label: "Password",
+                label: appLocalizations.password,
                 keyboardType: TextInputType.visiblePassword,
                 suffixIcon: IconButton(
                   onPressed: () {
@@ -87,7 +92,7 @@ class _RegisterState extends State<Register> {
                 ),
               ),
 
-              SizedBox(height: 8.h),
+              SizedBox(height: 16.h),
 
               CustomTextField(
                 controller: _rePasswordController,
@@ -95,7 +100,7 @@ class _RegisterState extends State<Register> {
                     ValidatorManager.validateRePassword(value, _passwordController.text),
                 isSecure: secureRePassword,
                 prefixIcon: Icons.lock,
-                label: "Re Password",
+                label: appLocalizations.re_password,
                 keyboardType: TextInputType.visiblePassword,
                 suffixIcon: IconButton(
                   onPressed: () {
@@ -108,19 +113,22 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
               ),
-              SizedBox(height: 8.h),
-              CustomButton(title: "Create Account", onPress: _createAccount),
-              SizedBox(height: 8.h),
+              SizedBox(height: 16.h),
+              CustomButton(title: appLocalizations.create_account, onPress: _createAccount),
+              SizedBox(height: 16.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Already Have Account ? ",
+                    appLocalizations.already_have_account,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
-                  CustomTextButton(text: "Login", onTap: () {
-                    Navigator.pushReplacementNamed(context, RouteManager.login);
-                  }),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: CustomTextButton(text:appLocalizations.login, onTap: () {
+                      Navigator.pushReplacementNamed(context, RouteManager.login);
+                    }),
+                  ),
                 ],
               ),
             ],

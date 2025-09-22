@@ -2,6 +2,7 @@ import 'package:event_app/core/resource/colors_manager/colors_manager.dart';
 import 'package:event_app/core/widgets/custom_tab_bar.dart';
 import 'package:event_app/core/widgets/tab_item.dart';
 import 'package:event_app/feature/main_layout/tabs/home/event_item.dart';
+import 'package:event_app/l10n/app_localizations.dart';
 import 'package:event_app/models/category_model.dart';
 import 'package:event_app/models/event_model.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,8 @@ class _HomeTapState extends State<HomeTap> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+
     return Column(
       children: [
         Container(
@@ -40,7 +43,7 @@ class _HomeTapState extends State<HomeTap> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Welcome Back ✨",
+                          "${appLocalizations.welcome_back}✨",
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         Text(
@@ -85,7 +88,7 @@ class _HomeTapState extends State<HomeTap> {
                 ),
               ),
               CustomTapBar(
-                categories: CategoryModel.categoriesWithAll,
+                categories: CategoryModel.getCategoriesWithAll(context),
                 selectedTaBbgColors: ColorsManager.whiteBlue,
                 selectedTaFgColors: ColorsManager.blue,
                 unselectedTaBbgColors: Colors.transparent,
@@ -100,7 +103,7 @@ class _HomeTapState extends State<HomeTap> {
             itemBuilder: (context, index) => EventItem(
               event: EventModel(
                 dateTime: DateTime.now(),
-                category: CategoryModel.categoriesWithAll[3],
+                category: CategoryModel.getCategoriesWithAll(context)[3],
                 title: "This is a Birthday Party ",
                 description: "description",
                 timeOfDay: TimeOfDay.now(),
