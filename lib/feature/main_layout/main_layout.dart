@@ -41,6 +41,7 @@ class _MainLayoutState extends State<MainLayout> {
     );
   }
   BottomAppBar _buildBottomNavigationBar() {
+    var appLocalizations = AppLocalizations.of(context)!;
     return BottomAppBar(
       notchMargin: 8,
 

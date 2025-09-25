@@ -2,9 +2,12 @@ import 'package:event_app/core/resource/colors_manager/colors_manager.dart';
 import 'package:event_app/core/resource/images_manager/image_manager.dart';
 import 'package:event_app/feature/main_layout/tabs/profile/dropdwon_item.dart';
 import 'package:event_app/l10n/app_localizations.dart';
+import 'package:event_app/providers/langu_provider.dart';
+import 'package:event_app/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class ProfileTap extends StatelessWidget {
   const ProfileTap({super.key});
@@ -12,6 +15,8 @@ class ProfileTap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+    LanguageProvider languageProvider = Provider.of<LanguageProvider>(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,35 +69,48 @@ class ProfileTap extends StatelessWidget {
         ),
         SizedBox(height: 24.h),
         DropdwonItem(
+          onChange: (newTheme) {
+            themeProvider.changeAppTheme(
+              newTheme == appLocalizations.light ? ThemeMode.light : ThemeMode.dark,
+            );
+          },
           title: appLocalizations.theme,
           menuItem: [appLocalizations.light, appLocalizations.dark],
-          selectedItem: appLocalizations.light,
+          selectedItem: themeProvider.isDark ? appLocalizations.dark : appLocalizations.light,
         ),
         SizedBox(height: 16.h),
         DropdwonItem(
+          onChange: (newLang){
+            languageProvider.changeAppLang(
+              newLang == "English" ? "en" :"ar"
+            );
+          },
           title: appLocalizations.language,
           menuItem: ["English", "Arabic"],
-          selectedItem: "English",
+          selectedItem: languageProvider.isEnglish ? "English" : "عربي",
         ),
-        Spacer(flex: 6,),
+        Spacer(flex: 6),
         Container(
-          margin: REdgeInsets.symmetric(horizontal: 16 ,vertical:120 ),
+          margin: REdgeInsets.symmetric(horizontal: 16, vertical: 120),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: ColorsManager.red,
               foregroundColor: ColorsManager.whiteBlue,
               padding: REdgeInsets.all(16),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.r)
+                borderRadius: BorderRadius.circular(16.r),
               ),
-              textStyle:GoogleFonts.inter(fontSize:20 ,fontWeight:FontWeight.w400
-            ),),
+              textStyle: GoogleFonts.inter(
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
             onPressed: () {},
             child: Row(
-              children: [Icon(Icons.logout),
-              SizedBox(width: 8.w,),
-              Text(appLocalizations.logout )
-
+              children: [
+                Icon(Icons.logout),
+                SizedBox(width: 8.w),
+                Text(appLocalizations.logout),
               ],
             ),
           ),

@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DropdwonItem extends StatelessWidget {
-  const DropdwonItem({super.key, required this.title, required this.selectedItem, required this.menuItem});
+   DropdwonItem({super.key, required this.title, required this.selectedItem, required this.menuItem , required this.onChange});
  final String title ;
  final String selectedItem;
   final List<String> menuItem;
+  void Function(String?) onChange;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -38,7 +39,7 @@ class DropdwonItem extends StatelessWidget {
                       child: Text(value),
                     );
                   }).toList(),
-                  onChanged: (_) {},
+                  onChanged: onChange,
                 ),
               ],
             ),
