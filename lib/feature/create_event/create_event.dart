@@ -20,6 +20,8 @@ class CreateEvent extends StatefulWidget {
 class _CreateEventState extends State<CreateEvent> {
   late final TextEditingController _tileController;
   late final TextEditingController _decriptionController;
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
 
   @override
   void initState() {
@@ -43,10 +45,9 @@ class _CreateEventState extends State<CreateEvent> {
     return Scaffold(
       appBar: AppBar(title: Text(appLocalizations.create_account)),
       body: Padding(
-        padding:  REdgeInsets.symmetric(horizontal: 8.0 , vertical: 16),
+        padding: REdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
         child: SingleChildScrollView(
           child: Column(
-          
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ClipRRect(
@@ -62,19 +63,25 @@ class _CreateEventState extends State<CreateEvent> {
                 unselectedTaFgColors: ColorsManager.blue,
               ),
               SizedBox(height: 16.h),
-              Text(appLocalizations.title, style: Theme.of(context).textTheme.labelSmall),
+              Text(
+                appLocalizations.title,
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
               SizedBox(height: 8.h),
               CustomTextField(
-                hint:appLocalizations.event_title,
+                hint: appLocalizations.event_title,
                 validator: (input) {},
                 controller: _tileController,
                 prefixIcon: Icons.edit,
               ),
               SizedBox(height: 16.h),
-              Text(appLocalizations.description, style: Theme.of(context).textTheme.labelSmall),
+              Text(
+                appLocalizations.description,
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
               SizedBox(height: 8.h),
               CustomTextField(
-                hint:appLocalizations.event_description,
+                hint: appLocalizations.event_description,
                 validator: (input) {},
                 controller: _decriptionController,
                 lines: 4,
@@ -83,61 +90,107 @@ class _CreateEventState extends State<CreateEvent> {
               Row(
                 children: [
                   Icon(Icons.date_range),
-                  SizedBox(width: 4.w,),
-                  Text(appLocalizations.event_date ,style: Theme.of(context).textTheme.labelSmall,),
+                  SizedBox(width: 4.w),
+                  Text(
+                    selectedDate.toString().substring(0, 10),
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
                   Spacer(),
-                  CustomTextButton(text: appLocalizations.choose_date, onTap: (){
-                    showDatePicker(context: context, firstDate: DateTime.now(), lastDate: DateTime(2060));
-                  }),
+                  CustomTextButton(
+                    text: appLocalizations.choose_date,
+                    onTap: _selectEventDate,
+                  ),
                 ],
               ),
-              SizedBox(height: 18.h,),
+              SizedBox(height: 18.h),
               Row(
                 children: [
                   Icon(Icons.access_time),
-                  SizedBox(width: 4.w,),
-                  Text(appLocalizations.event_time ,style: Theme.of(context).textTheme.labelSmall,),
+                  SizedBox(width: 4.w),
+                  Text(
+                    selectedTime.format(context),
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
                   Spacer(),
-                  CustomTextButton(text:appLocalizations.choose_time, onTap: (){
-                    showTimePicker(context: context,initialTime: TimeOfDay.now());
-                  }),
+                  CustomTextButton(
+                    text: appLocalizations.choose_time,
+                    onTap: _selectEventTime,
+                  ),
                 ],
               ),
-              SizedBox(height: 16.h,),
-              Text(appLocalizations.locations,style: Theme.of(context).textTheme.labelSmall,),
-              SizedBox(height: 8.h,),
+              SizedBox(height: 16.h),
+              Text(
+                appLocalizations.locations,
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+              SizedBox(height: 8.h),
 
               OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: ColorsManager.blue , width: 3.w)
-                    ,padding: REdgeInsets.all(8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.r),
-                    )
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: ColorsManager.blue, width: 3.w),
+                  padding: REdgeInsets.all(8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.r),
                   ),
-                  onPressed: (){}, child: Row(
-                children: [
-                  Card(
-                    color: ColorsManager.blue,
-                    child: Padding(
+                ),
+                onPressed: () {},
+                child: Row(
+                  children: [
+                    Card(
+                      color: ColorsManager.blue,
+                      child: Padding(
                         padding: REdgeInsets.all(8),
-                            child:Icon(Icons.location_searching ,color: ColorsManager.whiteBlue,)
-                    )),
-                  SizedBox(width: 8.w,),
-                  Text(appLocalizations.choose_event_location ,style: GoogleFonts.inter(fontSize: 16.sp ,fontWeight: FontWeight.w500,color: ColorsManager.blue),)
-                ],
-              )),
-              SizedBox(height: 16.h,),
-              CustomButton(title: appLocalizations.add_event, onPress: (){}),
-              SizedBox(height: 16.h,),
-
-          
-          
-          
+                        child: Icon(
+                          Icons.location_searching,
+                          color: ColorsManager.whiteBlue,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      appLocalizations.choose_event_location,
+                      style: GoogleFonts.inter(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: ColorsManager.blue,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16.h),
+              CustomButton(title: appLocalizations.add_event, onPress: () {}),
+              SizedBox(height: 16.h),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _selectEventDate() async {
+    selectedDate =
+        await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime.now(),
+          lastDate: DateTime.now().add(const Duration(days: 365)),
+        ) ??
+        selectedDate;
+    selectedDate =selectedDate.copyWith(hour: selectedTime.hour ,minute: selectedDate.minute);
+    setState(() {
+
+    });
+  }
+
+  void _selectEventTime() async {
+    selectedTime =
+        await showTimePicker(context: context, initialTime: TimeOfDay.now()) ??
+        selectedTime;
+    selectedDate = selectedDate.copyWith(
+      hour: selectedTime.hour,
+      minute: selectedTime.minute,
+    );
+    setState(() {});
   }
 }

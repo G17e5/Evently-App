@@ -1,12 +1,16 @@
+import 'package:event_app/UI_Utiles/Ui_Utiles.dart';
 import 'package:event_app/core/resource/colors_manager/colors_manager.dart';
 import 'package:event_app/core/resource/images_manager/image_manager.dart';
 import 'package:event_app/core/resource/regex_manager/regex_manager.dart';
 import 'package:event_app/core/route_manager/route_manager.dart';
 import 'package:event_app/core/widgets/custom_text_button.dart';
 import 'package:event_app/core/widgets/custom_text_field.dart';
+import 'package:event_app/firebase_services/firebase_services.dart';
 import 'package:event_app/l10n/app_localizations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/widgets/custom_button.dart';
@@ -38,17 +42,23 @@ class _LoginState extends State<Login> {
 
     return Scaffold(
       body: Padding(
-        padding:  REdgeInsets.all(8.0),
+        padding: REdgeInsets.all(8.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // SizedBox(height: 16.h),
-              SafeArea(child: Image.asset(ImageAssets.eventLogo, width: 130.w, height: 130.h)),
+              SafeArea(
+                child: Image.asset(
+                  ImageAssets.eventLogo,
+                  width: 130.w,
+                  height: 130.h,
+                ),
+              ),
               SizedBox(height: 24.h),
               CustomTextField(
-                label:appLocalizations.email,
+                label: appLocalizations.email,
                 validator: (value) => ValidatorManager.validateEmail(value),
                 prefixIcon: Icons.email,
                 controller: _emailController,
@@ -57,7 +67,7 @@ class _LoginState extends State<Login> {
               SizedBox(height: 16.h),
               CustomTextField(
                 isSecure: securePassword,
-                label:appLocalizations.password,
+                label: appLocalizations.password,
                 suffixIcon: IconButton(
                   onPressed: _onPasswordClickedIcon,
                   icon: Icon(
@@ -161,19 +171,31 @@ class _LoginState extends State<Login> {
     );
   }
 
-
-
   void _onPasswordClickedIcon() {
     setState(() {
       securePassword = !securePassword;
     });
   }
 
-  void _login() {
+  void _login() async {
     if (_formKey.currentState?.validate() == false) return;
+    try {
+      UIUtils.showLoading(context);
+      final UserCredential userCredential = await FirebaseServices.login(_emailController.text, _passwordController.text);
+      UIUtils.hideDialog(context);
+      UIUtils.ShowToastMessage("Login was Successfully", Colors.green);
+
+      Navigator.pushReplacementNamed(context, RouteManager.mainLayout);
+    } on FirebaseAuthException catch (e) {
+      UIUtils.hideDialog(context);
+      UIUtils.ShowToastMessage("Wrong email or Password", Colors.red);
+
+    } catch (e) {
+      UIUtils.hideDialog(context);
+      UIUtils.ShowToastMessage("Failed to Register", Colors.red);
+
+    }
   }
-
-
   @override
   void dispose() {
     // TODO: implement dispose

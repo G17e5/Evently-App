@@ -1,17 +1,24 @@
 import 'package:event_app/core/resource/colors_manager/colors_manager.dart';
 import 'package:event_app/core/resource/images_manager/image_manager.dart';
+import 'package:event_app/core/route_manager/route_manager.dart';
 import 'package:event_app/feature/main_layout/tabs/profile/dropdwon_item.dart';
 import 'package:event_app/l10n/app_localizations.dart';
 import 'package:event_app/providers/langu_provider.dart';
 import 'package:event_app/providers/theme_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class ProfileTap extends StatelessWidget {
+class ProfileTap extends StatefulWidget {
   const ProfileTap({super.key});
 
+  @override
+  State<ProfileTap> createState() => _ProfileTapState();
+}
+
+class _ProfileTapState extends State<ProfileTap> {
   @override
   Widget build(BuildContext context) {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
@@ -105,7 +112,7 @@ class ProfileTap extends StatelessWidget {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            onPressed: () {},
+            onPressed: _logout,
             child: Row(
               children: [
                 Icon(Icons.logout),
@@ -117,5 +124,10 @@ class ProfileTap extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _logout() async {
+   await  FirebaseAuth.instance.signOut();
+    Navigator.pushReplacementNamed(context , RouteManager.login);
   }
 }

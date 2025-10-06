@@ -1,12 +1,17 @@
+import 'package:event_app/UI_Utiles/Ui_Utiles.dart';
 import 'package:event_app/core/resource/images_manager/image_manager.dart';
 import 'package:event_app/core/resource/regex_manager/regex_manager.dart';
 import 'package:event_app/core/route_manager/route_manager.dart';
 import 'package:event_app/core/widgets/custom_button.dart';
 import 'package:event_app/core/widgets/custom_text_button.dart';
 import 'package:event_app/core/widgets/custom_text_field.dart';
+import 'package:event_app/firebase_services/firebase_services.dart';
 import 'package:event_app/l10n/app_localizations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -18,12 +23,16 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   bool securePassword = true;
   bool secureRePassword = true;
- late  TextEditingController _nameController;
-  late TextEditingController _emailController ;
-  late TextEditingController _passwordController ;
-  late TextEditingController _rePasswordController ;
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+
+  late TextEditingController _passwordController;
+
+  late TextEditingController _rePasswordController;
+
   GlobalKey<FormState> _fromKey = GlobalKey<FormState>();
-    @override
+
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -31,11 +40,11 @@ class _RegisterState extends State<Register> {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _rePasswordController = TextEditingController();
-
   }
+
   @override
   Widget build(BuildContext context) {
-      AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Scaffold(
       // resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text(appLocalizations.register)),
@@ -51,9 +60,13 @@ class _RegisterState extends State<Register> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset(ImageAssets.eventLogo, width: 130.w, height: 130.h),
+                child: Image.asset(
+                  ImageAssets.eventLogo,
+                  width: 130.w,
+                  height: 130.h,
+                ),
               ),
-               SizedBox(height: 24.h),
+              SizedBox(height: 24.h),
               CustomTextField(
                 controller: _nameController,
                 validator: ValidatorManager.validateName,
@@ -75,7 +88,7 @@ class _RegisterState extends State<Register> {
 
               CustomTextField(
                 controller: _passwordController,
-                validator: (value)=> ValidatorManager.validatePassword(value),
+                validator: (value) => ValidatorManager.validatePassword(value),
                 isSecure: securePassword,
                 prefixIcon: Icons.lock,
                 label: appLocalizations.password,
@@ -96,8 +109,10 @@ class _RegisterState extends State<Register> {
 
               CustomTextField(
                 controller: _rePasswordController,
-                validator: (value) =>
-                    ValidatorManager.validateRePassword(value, _passwordController.text),
+                validator: (value) => ValidatorManager.validateRePassword(
+                  value,
+                  _passwordController.text,
+                ),
                 isSecure: secureRePassword,
                 prefixIcon: Icons.lock,
                 label: appLocalizations.re_password,
@@ -114,7 +129,10 @@ class _RegisterState extends State<Register> {
                 ),
               ),
               SizedBox(height: 16.h),
-              CustomButton(title: appLocalizations.create_account, onPress: _createAccount),
+              CustomButton(
+                title: appLocalizations.create_account,
+                onPress: _createAccount,
+              ),
               SizedBox(height: 16.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -125,9 +143,15 @@ class _RegisterState extends State<Register> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(4.0),
-                    child: CustomTextButton(text:appLocalizations.login, onTap: () {
-                      Navigator.pushReplacementNamed(context, RouteManager.login);
-                    }),
+                    child: CustomTextButton(
+                      text: appLocalizations.login,
+                      onTap: () {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          RouteManager.login,
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -138,9 +162,25 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  void _createAccount() {
+  void _createAccount() async {
     if (_fromKey.currentState?.validate() == false) return;
+    try {
+      UIUtils.showLoading(context);
+      final UserCredential userCredential = await FirebaseServices.register(_emailController.text, _passwordController.text);
+      UIUtils.hideDialog(context);
+     UIUtils.ShowToastMessage("The Register Was Successfully", Colors.green);
+      Navigator.pushReplacementNamed(context, RouteManager.login);
+    } on FirebaseAuthException catch (e) {
+      UIUtils.hideDialog(context);
+      UIUtils.ShowToastMessage(e.code, Colors.red);
+
+    } catch (e) {
+      UIUtils.hideDialog(context);
+      UIUtils.ShowToastMessage("Failed to Register", Colors.red);
+
+    }
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
