@@ -1,13 +1,23 @@
+import 'package:event_app/UI_Utiles/Ui_Utiles.dart';
 import 'package:event_app/core/resource/colors_manager/colors_manager.dart';
 import 'package:event_app/core/resource/images_manager/image_manager.dart';
+import 'package:event_app/firebase_services/firebase_services.dart';
 import 'package:event_app/models/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class EventItem extends StatelessWidget {
-   EventItem({super.key , required this.event});
+class EventItem extends StatefulWidget {
+   EventItem({super.key , required this.event , required this.favouriteEvent});
   final EventModel event ;
+  final bool favouriteEvent ;
+
+  @override
+  State<EventItem> createState() => _EventItemState();
+}
+
+class _EventItemState extends State<EventItem> {
+   late bool isFavourite = widget.favouriteEvent;
    List<String> monthsEnglish = [
      "Jan",
      "Feb",
@@ -22,6 +32,7 @@ class EventItem extends StatelessWidget {
      "Nov",
      "Dec"
    ];
+
    @override
   Widget build(BuildContext context) {
     return Stack(
@@ -34,7 +45,7 @@ class EventItem extends StatelessWidget {
           decoration: BoxDecoration(
             image:DecorationImage(
                 fit: BoxFit.fill,
-                image: AssetImage(ImageAssets.birthdayLight)),
+                image: AssetImage(widget.event.category.imagePath )),
             borderRadius: BorderRadius.circular(16.r),
             border: Border.all(
                 color: ColorsManager.blue ,width: 1.w)
@@ -47,8 +58,8 @@ class EventItem extends StatelessWidget {
                  padding: REdgeInsets.symmetric(horizontal: 8.0),
                  child: Column(
                    children: [
-                     Text(event.dateTime.day.toString() , style:GoogleFonts.inter(fontSize:20.sp ,fontWeight: FontWeight.bold , color: ColorsManager.blue)),
-                     Text(monthsEnglish[event.dateTime.month - 1], style:GoogleFonts.inter(fontSize:14.sp ,fontWeight: FontWeight.bold , color: ColorsManager.blue)),
+                     Text(widget.event.dateTime.day.toString() , style:GoogleFonts.inter(fontSize:20.sp ,fontWeight: FontWeight.bold , color: ColorsManager.blue)),
+                     Text(monthsEnglish[widget.event.dateTime.month - 1], style:GoogleFonts.inter(fontSize:14.sp ,fontWeight: FontWeight.bold , color: ColorsManager.blue)),
                    ],
                  ),
                ),
@@ -59,8 +70,8 @@ class EventItem extends StatelessWidget {
                   padding: const EdgeInsets.symmetric( horizontal: 8.0 ,vertical: 5),
                   child: Row(
                     children: [
-                      Expanded(child: Text(event.title , style:Theme.of(context).textTheme.titleSmall),)
-                      ,IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border ,color: ColorsManager.blue,))
+                      Expanded(child: Text(widget.event.title , style:Theme.of(context).textTheme.titleSmall),)
+                      ,IconButton(onPressed: _markEventToFavourite, icon: Icon( isFavourite ? Icons.favorite : Icons.favorite_border ,color: ColorsManager.blue,))
                     ],
                   ),
                 ),
@@ -71,5 +82,24 @@ class EventItem extends StatelessWidget {
 
       ],
     );
+  }
+
+  void _markEventToFavourite() async {
+   if (isFavourite) {
+     UIUtils.showLoading(context);
+     await FirebaseServices.removeEventToFavourite(widget.event);
+     isFavourite = false;
+     UIUtils.hideDialog(context);
+     UIUtils.ShowToastMessage("Event Removed form Favourite", Colors.red);
+   } else{
+     UIUtils.showLoading(context);
+     await  FirebaseServices.addEventToFavourite(widget.event);
+     isFavourite =true;
+     UIUtils.hideDialog(context);
+     UIUtils.ShowToastMessage("Event added form Favourite", Colors.green);
+   }
+   setState(() {
+
+   });
   }
 }

@@ -3,6 +3,7 @@ import 'package:event_app/core/resource/images_manager/image_manager.dart';
 import 'package:event_app/core/route_manager/route_manager.dart';
 import 'package:event_app/feature/main_layout/tabs/profile/dropdwon_item.dart';
 import 'package:event_app/l10n/app_localizations.dart';
+import 'package:event_app/models/user_model.dart';
 import 'package:event_app/providers/langu_provider.dart';
 import 'package:event_app/providers/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -52,7 +53,7 @@ class _ProfileTapState extends State<ProfileTap> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "George Gamil",
+                     UserModel.currentUser!.name,
                       style: GoogleFonts.inter(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.bold,
@@ -61,7 +62,7 @@ class _ProfileTapState extends State<ProfileTap> {
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      "GG@gmail.com",
+                      UserModel.currentUser!.email,
                       style: GoogleFonts.inter(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,

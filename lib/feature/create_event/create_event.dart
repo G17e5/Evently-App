@@ -1,11 +1,15 @@
+import 'package:event_app/UI_Utiles/Ui_Utiles.dart';
 import 'package:event_app/core/resource/colors_manager/colors_manager.dart';
 import 'package:event_app/core/resource/images_manager/image_manager.dart';
 import 'package:event_app/core/widgets/custom_button.dart';
 import 'package:event_app/core/widgets/custom_tab_bar.dart';
 import 'package:event_app/core/widgets/custom_text_button.dart';
 import 'package:event_app/core/widgets/custom_text_field.dart';
+import 'package:event_app/firebase_services/firebase_services.dart';
 import 'package:event_app/l10n/app_localizations.dart';
 import 'package:event_app/models/category_model.dart';
+import 'package:event_app/models/event_model.dart';
+import 'package:event_app/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,23 +23,24 @@ class CreateEvent extends StatefulWidget {
 
 class _CreateEventState extends State<CreateEvent> {
   late final TextEditingController _tileController;
-  late final TextEditingController _decriptionController;
+  late final TextEditingController _descriptionController;
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
+  late CategoryModel selectedCategory = CategoryModel.getCategories(context)[0];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _tileController = TextEditingController();
-    _decriptionController = TextEditingController();
+    _descriptionController = TextEditingController();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     _tileController.dispose();
-    _decriptionController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -52,10 +57,15 @@ class _CreateEventState extends State<CreateEvent> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(16.r),
-                child: Image.asset(ImageAssets.birthdayLight),
+                child: Image.asset(selectedCategory.imagePath),
               ),
               SizedBox(height: 16.h),
               CustomTapBar(
+                onCategoryItemClicked: (category) {
+                  setState(() {
+                    selectedCategory = category;
+                  });
+                },
                 categories: CategoryModel.getCategories(context),
                 selectedTaBbgColors: ColorsManager.blue,
                 selectedTaFgColors: ColorsManager.whiteBlue,
@@ -83,7 +93,7 @@ class _CreateEventState extends State<CreateEvent> {
               CustomTextField(
                 hint: appLocalizations.event_description,
                 validator: (input) {},
-                controller: _decriptionController,
+                controller: _descriptionController,
                 lines: 4,
               ),
               SizedBox(height: 16.h),
@@ -159,7 +169,10 @@ class _CreateEventState extends State<CreateEvent> {
                 ),
               ),
               SizedBox(height: 16.h),
-              CustomButton(title: appLocalizations.add_event, onPress: () {}),
+              CustomButton(
+                title: appLocalizations.add_event,
+                onPress: _createEvent,
+              ),
               SizedBox(height: 16.h),
             ],
           ),
@@ -177,10 +190,27 @@ class _CreateEventState extends State<CreateEvent> {
           lastDate: DateTime.now().add(const Duration(days: 365)),
         ) ??
         selectedDate;
-    selectedDate =selectedDate.copyWith(hour: selectedTime.hour ,minute: selectedDate.minute);
-    setState(() {
+    selectedDate = selectedDate.copyWith(
+      hour: selectedTime.hour,
+      minute: selectedDate.minute,
+    );
+    setState(() {});
+  }
 
-    });
+  void _createEvent() async {
+    EventModel event = EventModel(
+      eventId:"",
+      category: selectedCategory,
+      userId: UserModel.currentUser!.id,
+      title: _tileController.text,
+      description: _descriptionController.text,
+      dateTime: selectedDate,
+    );
+    UIUtils.showLoading(context);
+    await FirebaseServices.addEventToFireStore(event, context);
+    UIUtils.hideDialog(context);
+    UIUtils.ShowToastMessage("Event Created Successfully", Colors.green);
+    Navigator.pop(context);
   }
 
   void _selectEventTime() async {

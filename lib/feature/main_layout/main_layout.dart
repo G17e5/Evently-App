@@ -17,16 +17,19 @@ class MainLayout extends StatefulWidget {
 class _MainLayoutState extends State<MainLayout> {
   List<Widget> tabs = [HomeTap(), MapTap(), FavoriteTap(), ProfileTap()];
   int selectIndex = 0;
+
  late  AppLocalizations appLocalizations = AppLocalizations.of(context)!;
 
   @override
   Widget build(BuildContext context) {
+    bool isKeyboardOpen= MediaQuery.of(context).viewInsets.bottom != 0.0;
+
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Scaffold(
       extendBody: true,
       body: tabs[selectIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton:_buildFab(),
+      floatingActionButton: isKeyboardOpen ? null :  _buildFab(),
       bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }

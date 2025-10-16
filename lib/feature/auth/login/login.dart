@@ -7,6 +7,7 @@ import 'package:event_app/core/widgets/custom_text_button.dart';
 import 'package:event_app/core/widgets/custom_text_field.dart';
 import 'package:event_app/firebase_services/firebase_services.dart';
 import 'package:event_app/l10n/app_localizations.dart';
+import 'package:event_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -181,21 +182,22 @@ class _LoginState extends State<Login> {
     if (_formKey.currentState?.validate() == false) return;
     try {
       UIUtils.showLoading(context);
-      final UserCredential userCredential = await FirebaseServices.login(_emailController.text, _passwordController.text);
+      UserCredential userCredential = await FirebaseServices.login(_emailController.text, _passwordController.text,);
+
+     UserModel.currentUser = await FirebaseServices.getUserFromFireStoreById(userCredential.user!.uid);
+
       UIUtils.hideDialog(context);
       UIUtils.ShowToastMessage("Login was Successfully", Colors.green);
-
       Navigator.pushReplacementNamed(context, RouteManager.mainLayout);
     } on FirebaseAuthException catch (e) {
       UIUtils.hideDialog(context);
       UIUtils.ShowToastMessage("Wrong email or Password", Colors.red);
-
     } catch (e) {
       UIUtils.hideDialog(context);
-      UIUtils.ShowToastMessage("Failed to Register", Colors.red);
-
+      UIUtils.ShowToastMessage("Failed to login", Colors.red);
     }
   }
+
   @override
   void dispose() {
     // TODO: implement dispose

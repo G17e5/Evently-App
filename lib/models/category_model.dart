@@ -1,3 +1,4 @@
+import 'package:event_app/core/resource/images_manager/image_manager.dart';
 import 'package:event_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
@@ -90,55 +91,55 @@ class CategoryModel {
         name: appLocalizations.sport,
         id: "1",
         iconData: Icons.sports_football_rounded,
-        imagePath: "",
+        imagePath: ImageAssets.sport,
       ),
       CategoryModel(
         name: appLocalizations.birthday,
         id: "2",
         iconData: Icons.celebration_rounded,
-        imagePath: "",
+        imagePath: ImageAssets.birthday,
       ),
       CategoryModel(
         name: appLocalizations.meeting,
         id: "3",
         iconData: Icons.laptop_mac_rounded,
-        imagePath: "",
+        imagePath: ImageAssets.meeting,
       ),
       CategoryModel(
         name: appLocalizations.gaming,
         id: "4",
         iconData: Icons.gamepad_rounded,
-        imagePath: "",
+        imagePath:ImageAssets.gaming,
       ),
       CategoryModel(
         name: appLocalizations.eating,
         id: "5",
         iconData: Icons.local_pizza_rounded,
-        imagePath: "",
+        imagePath: ImageAssets.eating,
       ),
       CategoryModel(
         name: appLocalizations.holiday,
         id: "6",
         iconData: Icons.holiday_village_rounded,
-        imagePath: "",
+        imagePath: ImageAssets.holiday,
       ),
       CategoryModel(
         name:appLocalizations.exhibition,
         id: "7",
         iconData: Icons.water_drop_rounded,
-        imagePath: "",
+        imagePath: ImageAssets.exhibition,
       ),
       CategoryModel(
         name:appLocalizations.work_shop,
         id: "8",
         iconData: Icons.workspaces_rounded,
-        imagePath: "",
+        imagePath: ImageAssets.workShop,
       ),
       CategoryModel(
         name: appLocalizations.book_club,
         id: "9",
         iconData: Icons.book_outlined,
-        imagePath: "",
+        imagePath:ImageAssets.bookClub,
       ),
     ];
   }
