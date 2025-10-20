@@ -1,6 +1,5 @@
 import 'package:event_app/UI_Utiles/Ui_Utiles.dart';
 import 'package:event_app/core/resource/colors_manager/colors_manager.dart';
-import 'package:event_app/core/resource/images_manager/image_manager.dart';
 import 'package:event_app/core/widgets/custom_button.dart';
 import 'package:event_app/core/widgets/custom_tab_bar.dart';
 import 'package:event_app/core/widgets/custom_text_button.dart';

@@ -127,7 +127,7 @@ class ThemeManager {
         fontSize: 20.sp,
         fontWeight: FontWeight.bold,
         color: ColorsManager.blue,
-      )
+      ),
     ),
   );
   static final ThemeData dark = ThemeData(

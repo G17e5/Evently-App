@@ -27,6 +27,7 @@ dependencies:
   cloud_firestore: ^5.4.4
 
   google_sign_in: ^6.2.1
+  location: ^8.0.1
 
 dev_dependencies:
   flutter_test:

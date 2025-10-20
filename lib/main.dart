@@ -4,7 +4,9 @@ import 'package:event_app/core/route_manager/route_manager.dart';
 import 'package:event_app/firebase_services/firebase_services.dart';
 import 'package:event_app/l10n/app_localizations.dart';
 import 'package:event_app/models/user_model.dart';
+import 'package:event_app/providers/event_details_date_time.dart';
 import 'package:event_app/providers/langu_provider.dart';
+import 'package:event_app/providers/maps_tab_provider.dart';
 import 'package:event_app/providers/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,6 +29,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => LanguageProvider()),
+        ChangeNotifierProvider(create: (context) => EventDetailsProvider()),
+        ChangeNotifierProvider(create: (context) => MapsTabProvider()),
       ],
       child: const EventApp(),
     ),
