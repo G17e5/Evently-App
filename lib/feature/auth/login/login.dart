@@ -148,7 +148,15 @@ class _LoginState extends State<Login> {
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  await FirebaseServices.signInWithGoogle();
+
+                  if (FirebaseAuth.instance.currentUser != null) {
+                    if (!context.mounted) return;
+                    Navigator.pushReplacementNamed(context, RouteManager.mainLayout);
+                  }
+                },
+
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

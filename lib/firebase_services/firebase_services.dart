@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_app/models/category_model.dart';
 import 'package:event_app/models/event_model.dart';
 import 'package:event_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseServices {
   static Future<UserCredential> register(String email, String password) async {
@@ -88,7 +91,10 @@ class FirebaseServices {
     return events;
   }
 
-  static Stream<List<EventModel>> getEventsWithRealTime(BuildContext context, CategoryModel category) async* {
+  static Stream<List<EventModel>> getEventsWithRealTime(
+    BuildContext context,
+    CategoryModel category,
+  ) async* {
     CollectionReference<EventModel> eventsCollection = getEventsCollection(
       context,
     );
@@ -96,11 +102,11 @@ class FirebaseServices {
         .where("categoryId", isEqualTo: category.id == "0" ? null : category.id)
         .orderBy("dateTime")
         .snapshots();
-   var events =  collectionSnapshots.map(
+    var events = collectionSnapshots.map(
       (snapshot) =>
           snapshot.docs.map((docSnapshot) => docSnapshot.data()).toList(),
     );
-   yield* events;
+    yield* events;
   }
 
   static Future<void> addEventToFavourite(EventModel event) {
@@ -142,5 +148,39 @@ class FirebaseServices {
         )
         .toList();
     return favouriteEvents;
+  }
+  // static Future<void> logoutWithGoogle() async {
+  //   try {
+  //     await FirebaseAuth.instance.signOut();
+  //     await GoogleSignIn().signOut();
+  //     print('Logout successful');
+  //   } catch (error) {
+  //     print('Error while signing out: $error');
+  //   }
+  // }
+
+
+  static Future<void> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    await FirebaseAuth.instance.signInWithCredential(credential);
+    UserModel user = UserModel(
+      id: FirebaseAuth.instance.currentUser!.uid,
+      name: googleUser?.displayName ?? 'NO Name',
+      email: googleUser?.email ?? 'NO Name',
+      favouriteEventsIds: [],
+    );
+    CollectionReference<UserModel> usersCollection = getUserCollection();
+    await usersCollection.doc(FirebaseAuth.instance.currentUser!.uid).set(user);
   }
 }
