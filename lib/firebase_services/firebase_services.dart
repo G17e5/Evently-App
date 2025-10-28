@@ -183,4 +183,18 @@ class FirebaseServices {
     CollectionReference<UserModel> usersCollection = getUserCollection();
     await usersCollection.doc(FirebaseAuth.instance.currentUser!.uid).set(user);
   }
+  static Future<void> updatedEvent(EventModel event ,BuildContext context) async{
+    CollectionReference<EventModel> collectionReference = getEventsCollection(context);
+    await collectionReference.doc(event.eventId).update(event.toJson());
+  }
+  static Future<void> deleteEvent(String eventId ,BuildContext context) async{
+    CollectionReference<EventModel> collectionReference = getEventsCollection(context);
+    await collectionReference.doc(eventId).delete();
+  }
+
+
+
+
+
+
 }

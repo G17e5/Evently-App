@@ -7,7 +7,9 @@ import 'package:event_app/l10n/app_localizations.dart';
 import 'package:event_app/models/category_model.dart';
 import 'package:event_app/models/event_model.dart';
 import 'package:event_app/models/user_model.dart';
+import 'package:event_app/providers/home_provider.dart';
 import 'package:event_app/providers/langu_provider.dart';
+import 'package:event_app/providers/maps_tab_provider.dart';
 import 'package:event_app/providers/theme_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +43,8 @@ class _HomeTapState extends State<HomeTap> {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     LanguageProvider languageProvider = Provider.of<LanguageProvider>(context);
+    HomeTapProvider homeTapProvider = Provider.of<HomeTapProvider>(context);
+     Provider.of<HomeTapProvider>(context);
     return Column(
       children: [
         Container(
@@ -76,7 +80,7 @@ class _HomeTapState extends State<HomeTap> {
                               color: ColorsManager.ofWhite,
                             ),
                             Text(
-                              "Cairo , Egypt",
+                             '${homeTapProvider.city},${homeTapProvider.country}',
                               style: Theme.of(context).textTheme.headlineSmall,
                             ),
                           ],
@@ -168,7 +172,7 @@ class _HomeTapState extends State<HomeTap> {
                       ),
                     )
                   : ListView.separated(
-                padding: EdgeInsets.only(
+                padding: REdgeInsets.only(
                   top: 16,
                   bottom: MediaQuery.of(context).padding.bottom + 16, // ← padding إضافي لآخر عنصر
                 ),

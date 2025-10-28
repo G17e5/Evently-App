@@ -34,5 +34,15 @@ class PrefsManager {
     String? savedLanguage = prefs.getString(CasheConstant.languageKey);
    return savedLanguage;
   }
+  static Future<void> setBool(String key, bool value) async {
+    await prefs.setBool(key, value);
+  }
+
+  static bool getBool(String key, {bool defaultValue = false}) {
+    return prefs.getBool(key) ?? defaultValue;
+  }
+  static Future<void> remove(String key) async {
+    await prefs.remove(key);
+  }
 
 }

@@ -1,12 +1,8 @@
-import 'package:event_app/firebase_services/firebase_services.dart';
-import 'package:event_app/models/category_model.dart';
-import 'package:event_app/models/event_model.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
-class MapsTabProvider extends ChangeNotifier {
+class PickLocationProvider extends ChangeNotifier {
   final Location location = Location();
   late GoogleMapController googleMapController;
 
@@ -17,17 +13,20 @@ class MapsTabProvider extends ChangeNotifier {
 
   Set<Marker> markers = {};
 
-  // List<EventModel> events = [];
+  LatLng? eventLocation;
+  void setEventLocation(LatLng location) {
+    eventLocation = location;
+    notifyListeners();
+  }
+  void clearLocation() {
+    eventLocation = null;
+    notifyListeners();
+  }
 
-  // Future<void> getEvents(BuildContext context, CategoryModel category) async {
-  //   events = await FirebaseServices.getEventsWithRealTime(context, category).first;
-  //   notifyListeners();
-  // }
-
-  // MapsTabProvider() {
-  //   getLocation();
-  //   // setLocationListener();
-  // }
+  PickLocationProvider() {
+    getLocation();
+    // setLocationListener();
+  }
 
   Future<bool> _getLocationPermission() async {
     PermissionStatus permissionStatus;
@@ -86,42 +85,15 @@ class MapsTabProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setLocationListener() {
-    location.changeSettings(accuracy: LocationAccuracy.high, interval: 1000);
-    location.onLocationChanged.listen((LocationData currentLocation) {
-      changeLocationOnMap(currentLocation);
-      notifyListeners();
-    });
-  }
-
-  void changeCameraPosition(LatLng latLng) {
-    CameraPosition cameraPosition = CameraPosition(
-      target: latLng,
-      zoom: 14.4746,
-    );
+  void changePickLocation(LatLng latLng) {
+    eventLocation = latLng;
     markers.add(
       Marker(
-        markerId: MarkerId(UniqueKey().toString()),
-        position: LatLng(latLng.latitude, latLng.longitude),
+        markerId: MarkerId("2"),
+        position: latLng,
+        infoWindow: InfoWindow(title: "Event Location"),
       ),
     );
-
-    googleMapController.animateCamera(
-      CameraUpdate.newCameraPosition(cameraPosition),
-    );
     notifyListeners();
-  }
-
-  String? country;
-  String? city;
-
-  Future<void> convertLatLandLong(LatLng latLng) async {
-    List<geocoding.Placemark> placemarks = await geocoding
-        .placemarkFromCoordinates(latLng.latitude, latLng.longitude);
-    if (placemarks.isNotEmpty) {
-      country = placemarks.first.country ?? 'cant find country';
-      city = placemarks.first.locality?? 'cant find country';
-      notifyListeners();
-    }
   }
 }

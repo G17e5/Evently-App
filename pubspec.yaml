@@ -29,6 +29,9 @@ dependencies:
   google_sign_in: ^6.2.1
   location: ^8.0.1
   google_maps_flutter: ^2.13.1
+  geocoding: ^4.0.0
+  flutter_native_splash: ^2.4.7
+  animated_toggle_switch: ^0.8.5
 
 dev_dependencies:
   flutter_test:
@@ -41,3 +44,4 @@ flutter:
 
   assets:
     - assets/images/
+

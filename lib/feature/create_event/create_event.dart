@@ -1,5 +1,6 @@
 import 'package:event_app/UI_Utiles/Ui_Utiles.dart';
 import 'package:event_app/core/resource/colors_manager/colors_manager.dart';
+import 'package:event_app/core/route_manager/route_manager.dart';
 import 'package:event_app/core/widgets/custom_button.dart';
 import 'package:event_app/core/widgets/custom_tab_bar.dart';
 import 'package:event_app/core/widgets/custom_text_button.dart';
@@ -9,12 +10,17 @@ import 'package:event_app/l10n/app_localizations.dart';
 import 'package:event_app/models/category_model.dart';
 import 'package:event_app/models/event_model.dart';
 import 'package:event_app/models/user_model.dart';
+import 'package:event_app/providers/pick_location_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 class CreateEvent extends StatefulWidget {
-  const CreateEvent({super.key});
+  final EventModel? event;
+
+  const CreateEvent({super.key, required this.event});
 
   @override
   State<CreateEvent> createState() => _CreateEventState();
@@ -33,6 +39,9 @@ class _CreateEventState extends State<CreateEvent> {
     super.initState();
     _tileController = TextEditingController();
     _descriptionController = TextEditingController();
+    if (widget.event != null) {
+      initEventData(widget.event!);
+    }
   }
 
   @override
@@ -45,9 +54,15 @@ class _CreateEventState extends State<CreateEvent> {
 
   @override
   Widget build(BuildContext context) {
+    PickLocationProvider pickLocationProvider =
+        Provider.of<PickLocationProvider>(context);
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: Text(appLocalizations.create_account)),
+      appBar: AppBar(
+        title: Text(
+          widget.event == null ? appLocalizations.create_account : "Edit Event",
+        ),
+      ),
       body: Padding(
         padding: REdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
         child: SingleChildScrollView(
@@ -142,7 +157,9 @@ class _CreateEventState extends State<CreateEvent> {
                     borderRadius: BorderRadius.circular(16.r),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, RouteManager.pickLocation);
+                },
                 child: Row(
                   children: [
                     Card(
@@ -150,18 +167,22 @@ class _CreateEventState extends State<CreateEvent> {
                       child: Padding(
                         padding: REdgeInsets.all(8),
                         child: Icon(
-                          Icons.location_searching,
+                          Icons.gps_fixed_outlined,
                           color: ColorsManager.whiteBlue,
                         ),
                       ),
                     ),
                     SizedBox(width: 8.w),
-                    Text(
-                      appLocalizations.choose_event_location,
-                      style: GoogleFonts.inter(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w500,
-                        color: ColorsManager.blue,
+                    Expanded(
+                      child: Text(
+                        pickLocationProvider.eventLocation == null
+                            ? appLocalizations.choose_event_location
+                            : 'Location: ${pickLocationProvider.eventLocation?.latitude.floor()}, ${pickLocationProvider.eventLocation?.longitude.floor()}',
+                        style: GoogleFonts.inter(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                          color: ColorsManager.blue,
+                        ),
                       ),
                     ),
                   ],
@@ -169,7 +190,9 @@ class _CreateEventState extends State<CreateEvent> {
               ),
               SizedBox(height: 16.h),
               CustomButton(
-                title: appLocalizations.add_event,
+                title: widget.event == null
+                    ? appLocalizations.add_event
+                    : 'Updated Event',
                 onPress: _createEvent,
               ),
               SizedBox(height: 16.h),
@@ -197,20 +220,38 @@ class _CreateEventState extends State<CreateEvent> {
   }
 
   void _createEvent() async {
+    PickLocationProvider pickLocationProvider =
+    Provider.of<PickLocationProvider>(context, listen: false);
+
     EventModel event = EventModel(
-      eventId:"",
+      eventId: widget.event?.eventId ?? "", // keep same ID when updating
       category: selectedCategory,
       userId: UserModel.currentUser!.id,
       title: _tileController.text,
       description: _descriptionController.text,
       dateTime: selectedDate,
+      lat: pickLocationProvider.eventLocation?.latitude ?? 0,
+      long: pickLocationProvider.eventLocation?.longitude ?? 0,
     );
+
     UIUtils.showLoading(context);
-    await FirebaseServices.addEventToFireStore(event, context);
-    UIUtils.hideDialog(context);
-    UIUtils.ShowToastMessage("Event Created Successfully", Colors.green);
-    Navigator.pop(context);
+
+    if (widget.event == null) {
+      // ✅ Create new event
+      await FirebaseServices.addEventToFireStore(event, context);
+      UIUtils.hideDialog(context);
+      UIUtils.ShowToastMessage("Event Created Successfully", Colors.green);
+    } else {
+      // ✅ Update existing event
+      await FirebaseServices.updatedEvent(event, context);
+      UIUtils.hideDialog(context);
+      UIUtils.ShowToastMessage("Event Updated Successfully", Colors.green);
+    }
+
+    // ✅ Close the page after success
+    Navigator.pushNamed(context,RouteManager.mainLayout);
   }
+
 
   void _selectEventTime() async {
     selectedTime =
@@ -222,4 +263,24 @@ class _CreateEventState extends State<CreateEvent> {
     );
     setState(() {});
   }
+  LatLng? eventLocation;
+
+  void initEventData(EventModel event) {
+    _tileController.text = event.title;
+    _descriptionController.text = event.description;
+    selectedDate = event.dateTime;
+    selectedTime = TimeOfDay.fromDateTime(event.dateTime);
+    selectedCategory = event.category;
+    eventLocation = LatLng(event.lat, event.long);
+
+    // Update provider location for UI
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final pickLocationProvider =
+      Provider.of<PickLocationProvider>(context, listen: false);
+      pickLocationProvider.setEventLocation(eventLocation!);
+    });
+
+    setState(() {});
+  }
+
 }

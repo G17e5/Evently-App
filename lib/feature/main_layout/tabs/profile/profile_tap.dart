@@ -130,7 +130,7 @@ class _ProfileTapState extends State<ProfileTap> {
 
   void _logout() async {
    await  FirebaseAuth.instance.signOut();
-   await GoogleSignIn().signOut();
+   // await GoogleSignIn().signOut();
     Navigator.pushReplacementNamed(context , RouteManager.login);
   }
 }

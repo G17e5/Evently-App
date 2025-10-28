@@ -5,8 +5,10 @@ import 'package:event_app/firebase_services/firebase_services.dart';
 import 'package:event_app/l10n/app_localizations.dart';
 import 'package:event_app/models/user_model.dart';
 import 'package:event_app/providers/event_details_date_time.dart';
+import 'package:event_app/providers/home_provider.dart';
 import 'package:event_app/providers/langu_provider.dart';
 import 'package:event_app/providers/maps_tab_provider.dart';
+import 'package:event_app/providers/pick_location_provider.dart';
 import 'package:event_app/providers/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -31,6 +33,8 @@ void main() async {
         ChangeNotifierProvider(create: (context) => LanguageProvider()),
         ChangeNotifierProvider(create: (context) => EventDetailsProvider()),
         ChangeNotifierProvider(create: (context) => MapsTabProvider()),
+        ChangeNotifierProvider(create: (context) => PickLocationProvider()),
+        ChangeNotifierProvider(create: (context) => HomeTapProvider()),
       ],
       child: const EventApp(),
     ),
@@ -44,24 +48,26 @@ class EventApp extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     LanguageProvider languProvider = Provider.of<LanguageProvider>(context);
+
     return ScreenUtilInit(
-      designSize: Size(393, 841),
+      designSize: const Size(393, 841),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: FirebaseAuth.instance.currentUser == null
-            ? RouteManager.login
-            : RouteManager.mainLayout,
+
+        initialRoute: RouteManager.splash,
+
         onGenerateRoute: RouteManager.router,
+
         theme: ThemeManager.light,
         darkTheme: ThemeManager.dark,
         themeMode: themeProvider.currentTheme,
         locale: Locale(languProvider.currentLang),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: [
-          Locale('en'), // English
-          Locale('ar'), // Spanish
+        supportedLocales: const [
+          Locale('en'),
+          Locale('ar'),
         ],
       ),
     );
